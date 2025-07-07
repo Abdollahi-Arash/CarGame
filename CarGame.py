@@ -3,7 +3,7 @@ import random,time
 
 def enemy_choose():
     Enmey_choosen=(random.randint(1,3))
-    choosen=f"C:\\Users\\ARASH\\Desktop\\CarGame\\Enemy{Enmey_choosen}.png"
+    choosen=f"Enemy{Enmey_choosen}.png"
     return(choosen)
 
 def Line_choose():
@@ -22,8 +22,8 @@ screen = pygame.display.set_mode((width, heigth))
 
 pygame.display.set_caption("CarGame")
 #---------------------------------run only in startup
-car=pygame.image.load("C:\\Users\\ARASH\\Desktop\\CarGame\\Car.png").convert_alpha()
-Road=pygame.image.load("C:\\Users\\ARASH\\Desktop\\CarGame\\road.png")
+car=pygame.image.load("Car.png").convert_alpha()
+Road=pygame.image.load("road.png")
 Enemy=pygame.image.load(enemy_choose())
 Enemy_y=0
 car_x=530
