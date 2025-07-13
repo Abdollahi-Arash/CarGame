@@ -26,13 +26,14 @@ GameOver=pygame.image.load("GameOver.png").convert_alpha()
 Enemy=pygame.image.load(enemy_choose())
 Enemy2=pygame.image.load(enemy_choose())
 Enemy_y=0
-Enemy_y2=0
+Enemy_y2=-300
 car_x=530
 speed=0.2
 Enemy_x=Line_choose()
 Enemy_x2=Line_choose()
 Lives=5
-crashed = False
+crashed1 = False
+crashed2 = False
 #---------------------------------run only in startup
 
 
@@ -67,16 +68,17 @@ while running:
         Enemy=pygame.image.load(enemy_choose())
         Enemy_y = 0
         Enemy_x=Line_choose()
-        crashed=False
+        crashed1=False
     
     #respawn2
     if Enemy_y2 > 1040:
-        Enemy2=pygame.image.load(enemy_choose())
+        Enemy2 = pygame.image.load(enemy_choose())
         Enemy_y2 = 0
-        Enemy_x2=Line_choose()+1
-        if Enemy_x2 == 3:
-            Enemy_x2 = 1
-        crashed=False
+
+        while True:
+            Enemy_x2 = Line_choose()
+            if Enemy_x2 != Enemy_x:
+                break
 
     
     #Keep the car in Line
@@ -86,18 +88,29 @@ while running:
     if car_x <325:
         car_x=325
 
-    #car collision
-    car_rect = car.get_rect(topleft=(car_x, heigth - 200))
-    enemy_rect = Enemy.get_rect(topleft=(Enemy_x, Enemy_y))
-    if car_rect.colliderect(enemy_rect) and not crashed:
+    #car collision1
+    car_rect = car.get_rect(topleft=(car_x, heigth - 200)).inflate(-20, -20)
+    enemy_rect = Enemy.get_rect(topleft=(Enemy_x, Enemy_y)).inflate(-20, -20)
+    if car_rect.colliderect(enemy_rect) and not crashed1:
         print("CRASH")
-        crashed = True
+        crashed1 = True
         Lives-=1
-    
+
+    #car collision2
+    enemy_rect2 = Enemy.get_rect(topleft=(Enemy_x2, Enemy_y2))
+    if car_rect.colliderect(enemy_rect2) and not crashed2:
+        print("CRASH")
+        crashed2 = True
+        Lives-=1
+
+
+
     #Gameover Logic
-    if Lives<1:
-        screen.blit(GameOver,(20,20))
-        running=False
+    if Lives < 1:
+        screen.blit(GameOver, (width // 2 - GameOver.get_width() // 2, heigth // 2 - GameOver.get_height() // 2))
+        pygame.display.flip()
+        time.sleep(2)
+        running = False
         
 
 
