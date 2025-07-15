@@ -12,7 +12,10 @@ def Line_choose():
     else:
         return 355
 
-
+def rotate_center(image, angle, center):
+    rotated_image = pygame.transform.rotate(image, angle)
+    rect = rotated_image.get_rect(center=center)
+    return rotated_image, rect
 
 pygame.init()
 #---------------------------------run only in startup
@@ -22,6 +25,8 @@ screen = pygame.display.set_mode((width, heigth))
 clock = pygame.time.Clock()
 fps = 100
 pygame.display.set_caption("CarGame")
+gauge = pygame.image.load("gauge.png").convert_alpha()
+needle = pygame.image.load("needle.png").convert_alpha()
 car=pygame.image.load("Car.png").convert_alpha()
 Road=pygame.image.load("road.png")
 GameOver=pygame.image.load("GameOver.png").convert_alpha()
@@ -134,7 +139,7 @@ while running:
         boss_rect = BOSS.get_rect(topleft=(BOSS_x, BOSS_y)).inflate(-30, -30)
         if car_rect.colliderect(boss_rect):
             print("BOSS CRASH")
-            Lives -= 2
+            Lives -= 1
             boss_active = False
 
     #Gameover Logic
@@ -169,6 +174,19 @@ while running:
     screen.blit(Enemy2,(Enemy_x2, Enemy_y2))
     if boss_active:
         screen.blit(BOSS, (BOSS_x, BOSS_y))
+
+    # --- Speedometer ---
+    gauge_pos = (670, 670)
+    gauge_center = (gauge_pos[0] + gauge.get_width() // 2, gauge_pos[1] + gauge.get_height() // 2)
+    screen.blit(gauge, gauge_pos)
+
+    min_angle = -160
+    max_angle = 60
+    normalized_speed = speed / 5
+    angle = min_angle + (max_angle - min_angle) * normalized_speed
+
+    rotated_needle, needle_rect = rotate_center(needle, -angle, gauge_center)
+    screen.blit(rotated_needle, needle_rect)
 
 #---------------------------------code goes here
 
